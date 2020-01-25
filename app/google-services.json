@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "19232526358",
+    "firebase_url": "https://vshare-a9fb4.firebaseio.com",
+    "project_id": "vshare-a9fb4",
+    "storage_bucket": "vshare-a9fb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19232526358:android:6a14f2ac618c22fc6e6537",
+        "android_client_info": {
+          "package_name": "com.example.vshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19232526358-j91e2ntntl80l6ce5dujonbcnomfah8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8LIZqt9U882pb3Of2nV3-x-8qsOSQGRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19232526358-j91e2ntntl80l6ce5dujonbcnomfah8u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

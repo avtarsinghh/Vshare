@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <TextView
+            android:id="@+id/signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="45dp"
+            android:gravity="center"
+            android:text="Sign In"
+            android:textColor="#54abee"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/avi"
+            android:layout_width="132dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:text="Vshare"
+            android:textColor="#c4c5c9"
+            android:textSize="25sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/signIn"
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:text="Already have an account?"
+            android:textColor="#c4c5c9"
+            android:textSize="16dp" />
+
+
+        -
+
+        <LinearLayout
+            android:id="@+id/signUpLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp"
+            android:background="@drawable/circleangle"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+
+            -
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="1dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/angle2" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:paddingLeft="3dp"
+                    android:src="@drawable/bag" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:text="Sign Up"
+                android:textColor="#fff"
+                android:textSize="22dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
