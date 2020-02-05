@@ -33,7 +33,7 @@ public class SplashScreen extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.get("role").equals("admin")) {
-                        Intent intent = new Intent(getApplicationContext(), AdminAddModifyMovie.class);
+                        Intent intent = new Intent(getApplicationContext(), AdminHomePage.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -48,6 +48,7 @@ public class SplashScreen extends AppCompatActivity {
         else{
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 }

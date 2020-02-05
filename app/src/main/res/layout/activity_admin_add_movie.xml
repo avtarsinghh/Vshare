@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -51,6 +52,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/imdb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -62,6 +64,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -73,6 +76,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/releaseYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -84,6 +88,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -95,6 +100,7 @@
             android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/linkImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
