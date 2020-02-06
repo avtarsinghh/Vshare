@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 public class AdminAddModifyMovie extends AppCompatActivity {
     Intent intent;
+    LinearLayout linearLayout;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     FirebaseFirestore firebaseFirestore;
@@ -32,6 +34,7 @@ public class AdminAddModifyMovie extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_movie);
 
+        linearLayout = findViewById(R.id.llprogressbar);
         nameET = findViewById(R.id.name);
         imdbET = findViewById(R.id.imdb);
         durationET = findViewById(R.id.duration);
@@ -79,6 +82,7 @@ public class AdminAddModifyMovie extends AppCompatActivity {
                 if (genre.equalsIgnoreCase("") || genre == null){
                     genreET.setError("Enter name of movie");
                 }else{
+                    linearLayout.setVisibility(View.VISIBLE);
                     Map<String, String> map = new HashMap<>();
                     map.put("name", name);
                     map.put("duration", duration);
@@ -91,6 +95,7 @@ public class AdminAddModifyMovie extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             Intent intent = new Intent(getApplicationContext(), AdminHomePage.class);
                             startActivity(intent);
+                            linearLayout.setVisibility(View.GONE);
                             finishAffinity();
                         }
                     });

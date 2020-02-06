@@ -1,10 +1,12 @@
 package com.example.vshare;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +36,7 @@ public class AdminHomePage extends AppCompatActivity {
     FirebaseUser user;
     FirebaseFirestore firestore;
     RecyclerView recyclerView;
+    LinearLayout linearLayout;
     Button add;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,26 @@ public class AdminHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home_page);
         add = findViewById(R.id.addMovie);
         recyclerView = findViewById(R.id.recyclerView);
+        linearLayout = findViewById(R.id.llprogressbar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
 
+        getData();
+
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AdminAddModifyMovie.class);
+                intent.putExtra("mode", "A");
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getData() {
         firestore.collection("movies").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -59,20 +78,10 @@ public class AdminHomePage extends AppCompatActivity {
                     movie.setYear(""+snapshot.getData().get("releaseYear"));
                     movieMap.put(snapshot.getId(), movie);
                 }
-                RecycleViewAdapterAdmin recycleViewAdapterAdmin = new RecycleViewAdapterAdmin(getApplicationContext(), movieMap);
+                RecycleViewAdapterAdmin recycleViewAdapterAdmin = new RecycleViewAdapterAdmin(AdminHomePage.this, movieMap, linearLayout);
                 recyclerView.setAdapter(recycleViewAdapterAdmin);
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminHomePage.this);
                 recyclerView.setLayoutManager(layoutManager);
-            }
-        });
-
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AdminAddModifyMovie.class);
-                intent.putExtra("mode", "A");
-                startActivity(intent);
             }
         });
     }
@@ -88,10 +97,18 @@ public class AdminHomePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                firebaseAuth.signOut();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+               AlertDialog.Builder builder = new AlertDialog.Builder(AdminHomePage.this).setTitle("Log Out??").setMessage("Do you want to logout?").
+                        setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                firebaseAuth.signOut();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }).setNegativeButton("No", null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
