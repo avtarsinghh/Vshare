@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,15 +72,29 @@ public class SignUp extends AppCompatActivity {
                                         map.put("email", email);
                                         map.put("cellNumber", cellNumber);
                                         map.put("role", "user");
+                                        final FirebaseUser user = task.getResult().getUser();
                                         db.collection("users").document(task.getResult().getUser().getUid()).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(SignUp.this, "Success", Toast.LENGTH_SHORT).show();
+                                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull final Task<Void> task) {
+                                                        Snackbar.make(findViewById(android.R.id.content), "Sign Up Successful, A email link is sent to your email for verification purpose.", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                finishAffinity();
+                                                                Intent intent = new Intent(getApplicationContext(), Login.class);
+                                                                startActivity(intent);
+                                                            }
+                                                        }).show();
+
+                                                    }
+                                                });
                                             }
                                         });
-                                    //    Toast.makeText(getApplicationContext(), "User Account created successfully", Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
+                                        //    Toast.makeText(getApplicationContext(), "User Account created successfully", Toast.LENGTH_LONG).show();
+
+
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Toast.makeText(getApplicationContext(), "Authentication failed.",
