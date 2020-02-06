@@ -3,6 +3,7 @@ package com.example.vshare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +33,7 @@ public class AdminAddModifyMovie extends AppCompatActivity {
     EditText nameET, imdbET, durationET, releaseYearET, genreET, linkImageET;
     String name, imdb, duration, releaseYear, genre, linkImage;
     Button addModify;
+    String movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +53,23 @@ public class AdminAddModifyMovie extends AppCompatActivity {
         intent = getIntent();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        String s = intent.getStringExtra("mode");
+        final String s = intent.getStringExtra("mode");
         if(s.equalsIgnoreCase("A"))
             addModify.setText("Add Movie");
         else{
             addModify.setText("Modify Movie");
         }
+
+        if(s.equalsIgnoreCase("M")){
+            nameET.setText(intent.getStringExtra("name"));
+            imdbET.setText(intent.getStringExtra("imdb"));
+            durationET.setText(intent.getStringExtra("duration"));
+            releaseYearET.setText(intent.getStringExtra("year"));
+            genreET.setText(intent.getStringExtra("genre"));
+            linkImageET.setText(intent.getStringExtra("link"));
+        }
+
+        movie = intent.getStringExtra("name");
 
         addModify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +98,9 @@ public class AdminAddModifyMovie extends AppCompatActivity {
                 if (genre.equalsIgnoreCase("") || genre == null){
                     genreET.setError("Enter name of movie");
                 }else{
+                    if(s.equalsIgnoreCase("M") && (movie !=null || !movie.equalsIgnoreCase(""))){
+                        deleteMovie(movie, firebaseFirestore);
+                    }
                     linearLayout.setVisibility(View.VISIBLE);
                     Map<String, String> map = new HashMap<>();
                     map.put("name", name);
@@ -102,5 +121,21 @@ public class AdminAddModifyMovie extends AppCompatActivity {
                 }
             }
         });
+    }
+    public static void deleteMovie(String movie, FirebaseFirestore db){
+        db.collection("movies").document(movie)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 }

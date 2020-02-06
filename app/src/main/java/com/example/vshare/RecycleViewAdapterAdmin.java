@@ -58,7 +58,15 @@ public class RecycleViewAdapterAdmin extends RecyclerView.Adapter<RecycleViewAda
         holder.modifyTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(context, AdminAddModifyMovie.class);
+                intent.putExtra("mode", "M");
+                intent.putExtra("name", map.get(arrayList.get(position)).getName());
+                intent.putExtra("imdb", map.get(arrayList.get(position)).getImdb());
+                intent.putExtra("genre", map.get(arrayList.get(position)).getGenre());
+                intent.putExtra("duration", map.get(arrayList.get(position)).getDuration());
+                intent.putExtra("year", map.get(arrayList.get(position)).getYear());
+                intent.putExtra("link", map.get(arrayList.get(position)).getLinkImage());
+                context.startActivity(intent);
             }
         });
 
