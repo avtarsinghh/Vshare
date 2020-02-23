@@ -24,16 +24,6 @@
                 android:background="@mipmap/ic_launcher"
                 android:layout_height="210dp"/>
 
-            <ImageView
-                android:id="@+id/deleteMovie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="9dp"
-                android:layout_marginEnd="8dp"
-                android:background="@android:drawable/ic_delete" />
-
             <TextView
                 android:id="@+id/movieName"
                 android:layout_width="170dp"
@@ -97,13 +87,13 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/modifyMovie"
+                android:id="@+id/invitePersons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="25dp"
                 android:layout_alignBottom="@+id/imageMovie"
-                android:text="Modify"
+                android:text="Invite"
                 android:textColor="#800303"
                 android:textStyle="bold|italic" />
         </RelativeLayout>
