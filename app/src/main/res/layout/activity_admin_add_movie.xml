@@ -10,21 +10,12 @@
     <ImageView
         android:layout_width="346dp"
         android:layout_height="346dp"
+        android:alpha="0.3"
         android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/addModifyBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -41,73 +32,135 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="Name"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
 
         <EditText
             android:id="@+id/imdb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="IMDB"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
 
         <EditText
             android:id="@+id/duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="Duration"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
 
         <EditText
             android:id="@+id/releaseYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="Release Year"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
 
         <EditText
             android:id="@+id/genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="Genre"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
 
         <EditText
             android:id="@+id/linkImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="#D5B9DFF8"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="35dp"
+            android:background="#0000"
             android:hint="Link for Poster"
             android:padding="16dp"
-            android:textColor="#00060A"
-            android:textColorHint="#023588"
-            android:textSize="20sp" />
+            android:textColor="#ADCCE2"
+            android:textColorHint="#ADCCE2"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="#ADCCE2" />
+
+        <Button
+            android:id="@+id/addModifyBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/angle"
+            android:gravity="center"
+            android:text="Add"
+            android:textColor="#ffffff"
+            android:padding="16dp"
+            android:layout_marginBottom="28dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="32dp"/>
     </LinearLayout>
 
     <include layout="@layout/progress_bar" />

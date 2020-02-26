@@ -3,15 +3,17 @@ package com.example.vshare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,15 +24,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    String email, password, name, cellNumber;
-    EditText emailET, passwordET, nameET, cellNumberET;
+    String email, password, name, cellNumber, dob, bio, gender;
+    EditText emailET, passwordET, nameET, cellNumberET, dobET, bioET;
+    Spinner genderSpinner;
     Button createUser;
     LinearLayout progressBar;
+    DatePickerDialog.OnDateSetListener date;
+    Calendar myCalendar;
+    String[] spinnerData = {"Please Select Gender", "Male", "Female"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,41 @@ public class SignUp extends AppCompatActivity {
         passwordET = findViewById(R.id.password);
         createUser = findViewById(R.id.createBtn);
         nameET = findViewById(R.id.fullName);
+        dobET = findViewById(R.id.dobET);
+        bioET = findViewById(R.id.bioET);
+        genderSpinner = findViewById(R.id.genderSpinner);
+        myCalendar = Calendar.getInstance();
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_checked, spinnerData);
+        genderSpinner.setAdapter(adapter);
+
+        date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+
+        dobET.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(SignUp.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
+
         cellNumberET = findViewById(R.id.cellNumber);
         mAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.llprogressbar);
@@ -50,15 +92,11 @@ public class SignUp extends AppCompatActivity {
                 password = passwordET.getText().toString();
                 name = nameET.getText().toString();
                 cellNumber = cellNumberET.getText().toString();
-                if (name.equals("") || name.length() < 3) {
-                    nameET.setError("Please enter name!!!");
-                } else if (email.equals("") || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    emailET.setError("Invalid Email");
-                } else if (cellNumber.length() != 10) {
-                    cellNumberET.setError("Invalid cell number");
-                } else if (password.equals("") || password.length() < 6) {
-                    passwordET.setError("Password is too short!!");
-                } else {
+                dob = dobET.getText().toString();
+                gender = genderSpinner.getSelectedItem().toString();
+                bio = bioET.getText().toString();
+                if(verifyData())
+                {
                     progressBar.setVisibility(View.VISIBLE);
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
@@ -67,16 +105,19 @@ public class SignUp extends AppCompatActivity {
                                     progressBar.setVisibility(View.GONE);
                                     if (task.isSuccessful()) {
                                         FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        Map<String, String> map = new HashMap<>();
-                                        map.put("name", name);
-                                        map.put("email", email);
-                                        map.put("cellNumber", cellNumber);
-                                        map.put("role", "user");
-                                        final FirebaseUser user = task.getResult().getUser();
-                                        db.collection("users").document(task.getResult().getUser().getUid()).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        User user = new User();
+                                        user.setEmail(email);
+                                        user.setCellNumber(cellNumber);
+                                        user.setRole("user");
+                                        user.setDob(dob);
+                                        user.setBio(bio);
+                                        user.setGender(gender);
+                                        user.setName(name);
+                                        final FirebaseUser userFU = task.getResult().getUser();
+                                        db.collection("users").document(task.getResult().getUser().getUid()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                userFU.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull final Task<Void> task) {
                                                         Snackbar.make(findViewById(android.R.id.content), "Sign Up Successful, A email link is sent to your email for verification purpose.", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
@@ -92,7 +133,7 @@ public class SignUp extends AppCompatActivity {
                                                 });
                                             }
                                         });
-                                        //    Toast.makeText(getApplicationContext(), "User Account created successfully", Toast.LENGTH_LONG).show();
+                                        //    Toast.makeText(getApplicationContext(), "com.example.vshare.User Account created successfully", Toast.LENGTH_LONG).show();
 
 
                                     } else {
@@ -106,5 +147,59 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd-MM-YYYY"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.CANADA);
+
+        dobET.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    private boolean verifyData() {
+        if (name.equals("") || name.length() < 3) {
+            nameET.setError("Please enter name!!!");
+            return false;
+        }
+        if (dob.equals("")) {
+            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Please enter email Id", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackbar.dismiss();
+                }
+            }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
+            return false;
+        }
+        if (gender.equals("") || genderSpinner.getSelectedItemPosition() == 0) {
+            final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Please Select Gender", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackbar.dismiss();
+                }
+            }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
+            return false;
+        }
+        if (cellNumber.length() != 10) {
+            cellNumberET.setError("Invalid cell number");
+            return false;
+        }
+        if (email.equals("") || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailET.setError("Invalid Email");
+            return false;
+        }
+
+        if (password.equals("") || password.length() < 6) {
+            passwordET.setError("Password is too short!!");
+            return false;
+        }
+
+        if (bio.equals("")){
+            bioET.setError("Please enter Bio");
+            return false;
+        }
+
+        return true;
     }
 }
