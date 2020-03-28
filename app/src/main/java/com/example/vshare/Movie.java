@@ -1,6 +1,8 @@
 package com.example.vshare;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
     private String name, imdb, genre, year, duration, linkImage;
 
     public String getName() {

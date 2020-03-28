@@ -18,9 +18,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SplashScreen extends AppCompatActivity {
-    FirebaseFirestore firebaseFirestore;
-    FirebaseAuth firebaseAuth;
-
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,60 +28,64 @@ public class SplashScreen extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (!user.isEmailVerified()) {
-                                Snackbar.make(findViewById(android.R.id.content), "Email not verified!!!", Snackbar.LENGTH_INDEFINITE).setAction("Resend email verification link", new View.OnClickListener() {
+        user = firebaseAuth.getCurrentUser();
+        startThread();
+    }
+
+    private void startThread() {
+        if (user != null) {
+            user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (!user.isEmailVerified()) {
+                        Snackbar.make(findViewById(android.R.id.content), "Email not verified!!!", Snackbar.LENGTH_INDEFINITE).setAction("Resend email verification link", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onClick(View view) {
-                                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(SplashScreen.this, "Email Sent, Please check your email.", Toast.LENGTH_LONG).show();
-                                                finishAffinity();
-                                            }
-                                        });
-                                    }
-                                }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
-                            } else {
-                                DocumentReference reference = firebaseFirestore.collection("users").document(user.getUid());
-                                reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot documentSnapshot = task.getResult();
-                                        if (documentSnapshot.get("role").equals("admin")) {
-                                            Intent intent = new Intent(getApplicationContext(), AdminHomePage.class);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(SplashScreen.this, "Email Sent, Please check your email.", Toast.LENGTH_LONG).show();
+                                        finishAffinity();
                                     }
                                 });
+                            }
+                        }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
+                    } else {
+                        DocumentReference reference = firebaseFirestore.collection("users").document(user.getUid());
+                        reference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.get("role").equals("admin")) {
+                                    Intent intent = new Intent(getApplicationContext(), AdminHomePage.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        });
 
-                            }
-                        }
-                    });
+                    }
                 }
-                else{
-                    Thread thread= new Thread(){
-                        public void run(){
-                            try {
-                                sleep(3000);
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-                    thread.start();
+            });
+        }
+        else{
+            Thread thread= new Thread(){
+                public void run(){
+                    try {
+                        sleep(3000);
+                        Intent intent = new Intent(getApplicationContext(), LandingPage.class);
+                        startActivity(intent);
+                        finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+            };
+            thread.start();
+        }
     }
 }

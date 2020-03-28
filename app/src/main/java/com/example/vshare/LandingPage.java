@@ -17,11 +17,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MainActivity extends AppCompatActivity {
-    TextView login;
-    LinearLayout signUp;
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore firebaseFirestore;
+public class LandingPage extends AppCompatActivity {
+    private TextView login;
+    private LinearLayout signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,22 +27,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         signUp = findViewById(R.id.signUpLL);
         login = findViewById(R.id.signIn);
-        firebaseAuth = FirebaseAuth.getInstance();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SignUp.class);
-                startActivity(intent);
+                goToSignUp();
             }
         });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                startActivity(intent);
+                goToLogin();
             }
         });
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+    }
+
+    private void goToSignUp() {
+        Intent intent = new Intent(getApplicationContext(), SignUp.class);
+        startActivity(intent);
     }
 }

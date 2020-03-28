@@ -49,12 +49,7 @@ public class RecyclerViewAdapterUser extends RecyclerView.Adapter<RecyclerViewAd
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, UserList.class);
-                intent.putExtra("name", map.get(arrayList.get(position)).getName());
-                intent.putExtra("imdb", map.get(arrayList.get(position)).getImdb());
-                intent.putExtra("genre", map.get(arrayList.get(position)).getGenre());
-                intent.putExtra("duration", map.get(arrayList.get(position)).getDuration());
-                intent.putExtra("year", map.get(arrayList.get(position)).getYear());
-                intent.putExtra("link", map.get(arrayList.get(position)).getLinkImage());
+                intent.putExtra("movie", map.get(arrayList.get(position)));
                 context.startActivity(intent);
             }
         });

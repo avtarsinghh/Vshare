@@ -9,22 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,7 +46,7 @@ public class AdminHomePage extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
 
-        getData();
+        getMovies();
 
 
         add.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +59,7 @@ public class AdminHomePage extends AppCompatActivity {
         });
     }
 
-    private void getData() {
+    private void getMovies() {
         firestore.collection("movies").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -103,9 +98,9 @@ public class AdminHomePage extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 firebaseAuth.signOut();
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), LandingPage.class);
                                 startActivity(intent);
-                                finish();
+                                finishAffinity();
                             }
                         }).setNegativeButton("No", null);
                 AlertDialog alertDialog = builder.create();

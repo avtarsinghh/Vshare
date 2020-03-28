@@ -1,10 +1,12 @@
 package com.example.vshare;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -48,6 +50,7 @@ public class HomePage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, 1, Menu.NONE, "Invitations");
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.top_right_menu, menu);
         return true;
@@ -56,12 +59,25 @@ public class HomePage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.logout : firebaseAuth.signOut();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+            case R.id.logout : AlertDialog.Builder builder = new AlertDialog.Builder(HomePage.this).setTitle("Log Out??").setMessage("Do you want to logout?").
+                    setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            firebaseAuth.signOut();
+                            Intent intent = new Intent(getApplicationContext(), LandingPage.class);
+                            startActivity(intent);
+                            finishAffinity();
+                        }
+                    }).setNegativeButton("No", null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                break;
+            case 1: Intent intent1 = new Intent(getApplicationContext(), InvitationsList.class);
+            startActivity(intent1);
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
     private void getData() {

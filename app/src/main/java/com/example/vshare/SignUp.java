@@ -30,7 +30,8 @@ import java.util.Locale;
 
 public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    String email, password, name, cellNumber, dob, bio, gender;
+    User user;
+    private String password;
     EditText emailET, passwordET, nameET, cellNumberET, dobET, bioET;
     Spinner genderSpinner;
     Button createUser;
@@ -52,6 +53,7 @@ public class SignUp extends AppCompatActivity {
         genderSpinner = findViewById(R.id.genderSpinner);
         myCalendar = Calendar.getInstance();
 
+        user = new User();
         ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_checked, spinnerData);
         genderSpinner.setAdapter(adapter);
 
@@ -88,65 +90,62 @@ public class SignUp extends AppCompatActivity {
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = emailET.getText().toString();
+                user.setEmail(emailET.getText().toString());
                 password = passwordET.getText().toString();
-                name = nameET.getText().toString();
-                cellNumber = cellNumberET.getText().toString();
-                dob = dobET.getText().toString();
-                gender = genderSpinner.getSelectedItem().toString();
-                bio = bioET.getText().toString();
+                user.setName(nameET.getText().toString());
+                user.setCellNumber(cellNumberET.getText().toString());
+                user.setDob(dobET.getText().toString());
+                user.setGender(genderSpinner.getSelectedItem().toString());
+                user.setBio(bioET.getText().toString());
                 if(verifyData())
                 {
-                    progressBar.setVisibility(View.VISIBLE);
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressBar.setVisibility(View.GONE);
-                                    if (task.isSuccessful()) {
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        User user = new User();
-                                        user.setEmail(email);
-                                        user.setCellNumber(cellNumber);
-                                        user.setRole("user");
-                                        user.setDob(dob);
-                                        user.setBio(bio);
-                                        user.setGender(gender);
-                                        user.setName(name);
-                                        final FirebaseUser userFU = task.getResult().getUser();
-                                        db.collection("users").document(task.getResult().getUser().getUid()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                userFU.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull final Task<Void> task) {
-                                                        Snackbar.make(findViewById(android.R.id.content), "Sign Up Successful, A email link is sent to your email for verification purpose.", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View view) {
-                                                                finishAffinity();
-                                                                Intent intent = new Intent(getApplicationContext(), Login.class);
-                                                                startActivity(intent);
-                                                            }
-                                                        }).show();
-
-                                                    }
-                                                });
-                                            }
-                                        });
-                                        //    Toast.makeText(getApplicationContext(), "com.example.vshare.User Account created successfully", Toast.LENGTH_LONG).show();
-
-
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                                Toast.LENGTH_LONG).show();
-                                    }
-
-                                }
-                            });
+                    createUser();
                 }
             }
         });
+    }
+
+    private void createUser() {
+        progressBar.setVisibility(View.VISIBLE);
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
+                .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            user.setRole("user");
+                            final FirebaseUser userFU = task.getResult().getUser();
+                            db.collection("users").document(task.getResult().getUser().getUid()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    userFU.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<Void> task) {
+                                            Snackbar.make(findViewById(android.R.id.content), "Sign Up Successful, A email link is sent to your email for verification purpose.", Snackbar.LENGTH_INDEFINITE).setAction("Ok", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    finishAffinity();
+                                                    Intent intent = new Intent(getApplicationContext(), Login.class);
+                                                    startActivity(intent);
+                                                }
+                                            }).show();
+
+                                        }
+                                    });
+                                }
+                            });
+                            //    Toast.makeText(getApplicationContext(), "com.example.vshare.User Account created successfully", Toast.LENGTH_LONG).show();
+
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
     }
 
     private void updateLabel() {
@@ -157,11 +156,11 @@ public class SignUp extends AppCompatActivity {
     }
 
     private boolean verifyData() {
-        if (name.equals("") || name.length() < 3) {
+        if (user.getName().equals("") || user.getName().length() < 3) {
             nameET.setError("Please enter name!!!");
             return false;
         }
-        if (dob.equals("")) {
+        if (user.getDob().equals("")) {
             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Please enter email Id", Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction("Ok", new View.OnClickListener() {
                 @Override
@@ -171,7 +170,7 @@ public class SignUp extends AppCompatActivity {
             }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
             return false;
         }
-        if (gender.equals("") || genderSpinner.getSelectedItemPosition() == 0) {
+        if (user.getGender().equals("") || genderSpinner.getSelectedItemPosition() == 0) {
             final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Please Select Gender", Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction("Ok", new View.OnClickListener() {
                 @Override
@@ -181,11 +180,11 @@ public class SignUp extends AppCompatActivity {
             }).setActionTextColor(getResources().getColor(android.R.color.holo_red_dark)).show();
             return false;
         }
-        if (cellNumber.length() != 10) {
+        if (user.getCellNumber().length() != 10) {
             cellNumberET.setError("Invalid cell number");
             return false;
         }
-        if (email.equals("") || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (user.getEmail().equals("") || !Patterns.EMAIL_ADDRESS.matcher(user.getEmail()).matches()) {
             emailET.setError("Invalid Email");
             return false;
         }
@@ -195,7 +194,7 @@ public class SignUp extends AppCompatActivity {
             return false;
         }
 
-        if (bio.equals("")){
+        if (user.getBio().equals("")){
             bioET.setError("Please enter Bio");
             return false;
         }

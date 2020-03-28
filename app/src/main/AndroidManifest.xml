@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UserList"></activity>
-        <activity android:name=".Invitations" />
+        <activity android:name=".InvitationsList" />
         <activity android:name=".AdminAddModifyMovie" />
         <activity android:name=".AdminHomePage" />
         <activity android:name=".SplashScreen">
@@ -25,7 +25,7 @@
         <activity android:name=".HomePage" />
         <activity android:name=".SignUp" />
         <activity android:name=".Login" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".LandingPage" />
     </application>
 
 </manifest>
